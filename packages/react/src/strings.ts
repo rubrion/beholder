@@ -37,6 +37,11 @@ export interface Strings {
 	thinks: string;
 	collapse: string;
 	notReady: string;
+	attach: string;
+	attaching: string;
+	removeAttachment: (name: string) => string;
+	/** Sent when the person attaches files and writes nothing. */
+	attachedOnly: string;
 	locale: string;
 }
 
@@ -75,6 +80,10 @@ export const en: Strings = {
 	thinks: 'thinks',
 	collapse: 'Collapse the conversations',
 	notReady: 'The assistant cannot answer right now.',
+	attach: 'Attach files',
+	attaching: 'Uploading',
+	removeAttachment: (n) => `Remove ${n}`,
+	attachedOnly: 'Here are the files.',
 	locale: 'en',
 };
 
@@ -113,5 +122,9 @@ export const ptBR: Strings = {
 	thinks: 'pensa',
 	collapse: 'Recolher as conversas',
 	notReady: 'O assistente não pode responder agora.',
+	attach: 'Anexar arquivos',
+	attaching: 'Enviando',
+	removeAttachment: (n) => `Remover ${n}`,
+	attachedOnly: 'Seguem os arquivos.',
 	locale: 'pt-BR',
 };

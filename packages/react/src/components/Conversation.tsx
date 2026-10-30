@@ -1,4 +1,4 @@
-import { ArrowDown, ArrowUp, Square } from 'lucide-react';
+import { ArrowDown, ArrowUp, FileText, LoaderCircle, Paperclip, Square, X } from 'lucide-react';
 import { useEffect, useLayoutEffect, useRef, useState, type ReactNode } from 'react';
 import type { Phase, Turn } from '../events.js';
 import { useAgent } from '../provider.js';
@@ -114,35 +114,77 @@ function Message({ turn, name, phase, compact }: { turn: Turn; name: string; pha
 }
 
 /** The question field: grows with the text; Enter sends, Shift+Enter breaks the line; while answering, the button stops. */
+type Attachment = { id: number; name: string; note?: string; error?: string };
+
 export function Composer({ compact, placeholder, className }: { compact?: boolean; placeholder?: string; className?: string }) {
-	const { busy, send, stop, available, t } = useAgent();
+	const { busy, send, stop, available, config, t } = useAgent();
 	const [text, setText] = useState('');
+	const [files, setFiles] = useState<Attachment[]>([]);
 	const field = useRef<HTMLTextAreaElement>(null);
+	const picker = useRef<HTMLInputElement>(null);
+	const next = useRef(0);
 	useLayoutEffect(() => {
 		const el = field.current;
 		if (!el) return;
 		el.style.height = 'auto';
 		if (text) el.style.height = `${Math.min(el.scrollHeight, 200)}px`;
 	}, [text]);
+	const uploading = files.some((f) => !f.note && !f.error);
+	const ready = files.filter((f) => f.note);
+	const canSend = (Boolean(text.trim()) || ready.length > 0) && !busy && available && !uploading;
 	const submit = () => {
-		if (!text.trim() || busy || !available) return;
-		send(text);
+		if (!canSend) return;
+		// The attachments' lines go with the question: they are what the agent reads.
+		send([text.trim() || t.attachedOnly, ...ready.map((f) => f.note)].join('\n'));
 		setText('');
+		setFiles([]);
+	};
+	const attach = (list: FileList | null) => {
+		const upload = config.attach?.upload;
+		if (!upload || !list) return;
+		for (const file of Array.from(list)) {
+			const id = next.current++;
+			setFiles((all) => [...all, { id, name: file.name }]);
+			upload(file)
+				.catch((e: unknown) => ({ error: e instanceof Error ? e.message : t.failed }))
+				.then((r) => setFiles((all) => all.map((f) => (f.id === id ? { ...f, ...r } : f))));
+		}
+		if (picker.current) picker.current.value = '';
 	};
 	return (
 		<form onSubmit={(e) => { e.preventDefault(); submit(); }}
-			className={cn('flex items-end gap-2 rounded-2xl border bg-card p-1.5 pl-3 shadow-sm focus-within:ring-2 focus-within:ring-ring/40', className)}>
-			<textarea ref={field} autoFocus rows={1} value={text} maxLength={4000} aria-label={t.placeholder}
-				placeholder={placeholder ?? t.placeholder}
-				className={cn('max-h-[200px] min-h-9 flex-1 resize-none bg-transparent py-2 text-sm outline-none placeholder:text-muted-foreground', compact && 'min-h-8 py-1.5')}
-				onChange={(e) => setText(e.target.value)}
-				onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey && !e.nativeEvent.isComposing) { e.preventDefault(); submit(); } }} />
-			{busy ? (
-				<IconButton label={t.stop} onClick={stop} className="rounded-full bg-secondary text-secondary-foreground"><Square className="fill-current" /></IconButton>
-			) : (
-				<button type="submit" disabled={!text.trim() || !available} title={t.ask} aria-label={t.ask}
-					className="inline-flex size-8 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground transition-opacity disabled:opacity-40 [&_svg]:size-4"><ArrowUp /></button>
+			className={cn('rounded-2xl border bg-card p-1.5 shadow-sm focus-within:ring-2 focus-within:ring-ring/40', className)}>
+			{files.length > 0 && (
+				<ul className="flex flex-wrap gap-1.5 px-1.5 pt-1 pb-1.5" aria-live="polite">
+					{files.map((f) => (
+						<li key={f.id} className={cn('flex max-w-full items-center gap-1.5 rounded-lg border px-2 py-1 text-xs', f.error ? 'border-destructive/50 text-destructive' : 'bg-muted/50')}>
+							{f.note || f.error ? <FileText className="size-3.5 shrink-0" /> : <LoaderCircle className="size-3.5 shrink-0 animate-spin" aria-label={t.attaching} />}
+							<span className="truncate" title={f.error ?? f.name}>{f.error ? `${f.name}: ${f.error}` : f.name}</span>
+							<button type="button" aria-label={t.removeAttachment(f.name)} title={t.removeAttachment(f.name)} onClick={() => setFiles((all) => all.filter((x) => x.id !== f.id))}
+								className="grid size-4 place-items-center rounded text-muted-foreground hover:text-foreground"><X className="size-3" /></button>
+						</li>
+					))}
+				</ul>
 			)}
+			<div className="flex items-end gap-2 pl-1.5">
+				{config.attach ? (
+					<>
+						<input ref={picker} type="file" multiple hidden accept={config.attach.accept} onChange={(e) => attach(e.target.files)} />
+						<IconButton label={t.attach} disabled={busy || !available} onClick={() => picker.current?.click()} className="rounded-full"><Paperclip /></IconButton>
+					</>
+				) : <span className="w-1.5" />}
+				<textarea ref={field} autoFocus rows={1} value={text} maxLength={4000} aria-label={t.placeholder}
+					placeholder={placeholder ?? t.placeholder}
+					className={cn('max-h-[200px] min-h-9 flex-1 resize-none bg-transparent py-2 text-sm outline-none placeholder:text-muted-foreground', compact && 'min-h-8 py-1.5')}
+					onChange={(e) => setText(e.target.value)}
+					onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey && !e.nativeEvent.isComposing) { e.preventDefault(); submit(); } }} />
+				{busy ? (
+					<IconButton label={t.stop} onClick={stop} className="rounded-full bg-secondary text-secondary-foreground"><Square className="fill-current" /></IconButton>
+				) : (
+					<button type="submit" disabled={!canSend} title={t.ask} aria-label={t.ask}
+						className="inline-flex size-8 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground transition-opacity disabled:opacity-40 [&_svg]:size-4"><ArrowUp /></button>
+				)}
+			</div>
 		</form>
 	);
 }

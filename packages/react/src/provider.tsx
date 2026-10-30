@@ -36,6 +36,15 @@ export interface AgentConfig {
 	renderMascot?: (props: { phase: Phase; size: number; jumping?: boolean }) => ReactNode;
 	/** Shown instead of the conversation when the preflight blocks (missing key, budget…). */
 	renderBlocked?: (status: Status) => ReactNode;
+	/**
+	 * Files the person can attach to a question. The app uploads each one its own way and returns
+	 * the line the agent reads (e.g. a reference to pass to a tool); it goes out with the question.
+	 */
+	attach?: {
+		/** The file input's accept, e.g. ".xml,.zip". */
+		accept?: string;
+		upload: (file: File) => Promise<{ note: string } | { error: string }>;
+	};
 }
 
 export interface Conversation {

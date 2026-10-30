@@ -95,6 +95,17 @@ import '@rubrion/agent-kit-react/styles.css';
 <AssistantScreen panelSide="right" />
 ```
 
+**Attachments** (optional): give `attach` and the composer gets a paperclip. The app uploads each
+file its own way and returns the line the agent reads, usually a reference a tool takes; the lines
+go out with the question.
+
+```tsx
+attach={{ accept: '.pdf', upload: async (file) => {
+  const r = await uploadToMyApi(file);
+  return r.ok ? { note: `Attached: ${file.name}, document_id ${r.id}` } : { error: r.message };
+} }}
+```
+
 The components use the shadcn/ui tokens (`bg-card`, `text-muted-foreground`, `ring-ring`…), so
 they match a shadcn app. Tailwind must scan the package; in your CSS:
 
