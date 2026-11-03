@@ -48,6 +48,8 @@ export interface AgentDefinition {
 	/** Output cap on Workers AI. External models get more room, since their thinking counts as output. */
 	maxOutputTokens?: number;
 	instructions: string;
+	/** Mastra input processors, e.g. mastra-cloudflare's forgetResults(['ler_documento']) so a document's text isn't resent with every message. */
+	inputProcessors?: unknown[];
 }
 
 /** What one answer cost, reported when the stream ends. */

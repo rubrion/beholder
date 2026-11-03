@@ -85,6 +85,7 @@ export function createAgentWorker<E extends object = Record<string, unknown>>(o:
 				model: (({ requestContext }: { requestContext?: RequestContext }) =>
 					resolveModel((requestContext?.get('model') as ModelChoice | undefined) ?? fallback, o.ai(current!), Boolean(def.thinking), o.providers)) as never,
 				tools: def.tools as never,
+				...(def.inputProcessors?.length ? { inputProcessors: def.inputProcessors as never } : {}),
 				memory: () => getMemory(),
 			});
 			built.set(def.id, agent);
