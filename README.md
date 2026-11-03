@@ -139,6 +139,9 @@ On a site without Tailwind's preflight, import only `tailwindcss/theme` and
 - To change data, return a **draft** (never write): the UI shows a card with a link, the person
   confirms, and the app's normal API saves it.
 - Scope every query by `caller.tenant` (the `scope` option) and test that tenant B never sees A.
+- A tool that returns a lot of text (a document, a web page): `inputProcessors: [forgetResults(['read_doc'])]`
+  on the agent definition (`forgetResults` from `@rubrion/mastra-cloudflare`) sends it with the turn
+  that read it, not with every message after. Ready-made `readFileTool` and `browseTool` live there too.
 
 ## Develop
 
