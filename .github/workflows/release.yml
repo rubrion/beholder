@@ -1,0 +1,39 @@
+# Every push to main: build, test, then semantic-release once per package.
+# Each package reads only the commits that touch its folder (Conventional
+# Commits, semantic-release-monorepo) and is tagged on its own
+# (@rubrion/agent-kit-react-v0.2.0). fix → patch, feat → minor, a breaking
+# change (! or BREAKING CHANGE) → major. npm trusts this workflow (trusted
+# publishing, OIDC): no token, and each version gets provenance.
+name: release
+on:
+  push:
+    branches: [main]
+permissions:
+  contents: write
+  issues: write
+  pull-requests: write
+  id-token: write
+concurrency: release
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - run: npm test
+      # The server first: the React package doesn't depend on it, but its users do both.
+      - run: npx semantic-release
+        working-directory: packages/server
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - run: npx semantic-release
+        working-directory: packages/react
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

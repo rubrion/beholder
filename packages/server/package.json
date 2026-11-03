@@ -1,9 +1,15 @@
 {
   "name": "@rubrion/agent-kit-server",
-  "version": "0.1.0",
+  "version": "0.0.0-semantic-release",
   "description": "Agent worker (Mastra on Cloudflare Workers, D1 memory, slim SSE) and the gateway that fronts it.",
   "license": "MIT",
   "author": "Rubrion",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rubrion/agent-kit.git",
+    "directory": "packages/server"
+  },
+  "homepage": "https://github.com/rubrion/agent-kit#readme",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",

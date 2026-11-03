@@ -156,3 +156,7 @@ over HTTP/1.1.
 ## License
 
 MIT
+
+## Releases
+
+Every push to `main` is released by CI (`.github/workflows/release.yml`): semantic-release runs once per package, reading only the commits that touch its folder. Commit messages follow [Conventional Commits](https://www.conventionalcommits.org), scoped by package (`feat(react): …`, `fix(server): …`): `fix` publishes a patch, `feat` a minor, a breaking change (`feat!:` or a `BREAKING CHANGE:` footer) a major; `docs`, `chore`, `ci`, `test` and `refactor` publish nothing. npm trusts the workflow (trusted publishing), so there is no token and each version carries provenance. Versions live in git tags (`@rubrion/agent-kit-react-v0.2.0`) and on npm, not in `package.json`.

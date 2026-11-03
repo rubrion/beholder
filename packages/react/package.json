@@ -1,9 +1,15 @@
 {
   "name": "@rubrion/agent-kit-react",
-  "version": "0.1.2",
+  "version": "0.0.0-semantic-release",
   "description": "React chat UI for the agent kit: floating chat box, full assistant screen, streamed steps (thinking, tool calls, text).",
   "license": "MIT",
   "author": "Rubrion",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rubrion/agent-kit.git",
+    "directory": "packages/react"
+  },
+  "homepage": "https://github.com/rubrion/agent-kit#readme",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
