@@ -19,6 +19,15 @@ browser ──► app Worker /api/agent/*  (gateway: who is asking? may they ask
 | [`@rubrion/agent-kit-react`](packages/react) | `AgentProvider`, `ChatBox` (floating, non-modal, on every screen), `AssistantScreen` (full page with agent picker and conversations), and the pieces they are made of |
 | [`template/`](template) | A working app with both: `template/agent` (the agent Worker) and `template/web` (Vite + React + Tailwind, the Worker serving it with the gateway behind Cloudflare Access). This is what runs at agent-kit.rubrion.ai |
 
+## Demo
+
+A playground for the mascot (every phase, sizes, colors, light and dark), using the library from this repo:
+
+```sh
+npm install
+npm run demo        # http://localhost:5180
+```
+
 ## Start a new project from the template
 
 ```bash

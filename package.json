@@ -7,13 +7,15 @@
     "packages/server",
     "packages/react",
     "template/agent",
-    "template/web"
+    "template/web",
+    "demo"
   ],
   "scripts": {
     "build": "npm run build -w @rubrion/agent-kit-server -w @rubrion/agent-kit-react",
     "test": "npm test -w @rubrion/agent-kit-server -w @rubrion/agent-kit-react",
-    "check": "npm run build && npm run check -w template/agent -w template/web",
+    "check": "npm run build && npm run check -w template/agent -w template/web -w demo",
     "dev": "npm run build && npm run dev -w template/web",
+    "demo": "npm run build && npm run dev -w demo",
     "deploy": "npm run build && npm run deploy -w template/agent && npm run deploy -w template/web"
   },
   "devDependencies": {
