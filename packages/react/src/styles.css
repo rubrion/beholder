@@ -61,7 +61,7 @@
    gaze offsets (--ak-look, --ak-peek) are set inline (Beholder.tsx). */
 .ak-beholder {
 	--ak-beholder-body-top: #41246a; --ak-beholder-body-bottom: #231433; --ak-beholder-flame: #53307f;
-	--ak-beholder-line: #150b22; --ak-beholder-white: #dbd1e8;
+	--ak-beholder-line: #150b22; --ak-beholder-rim: #4a3168; --ak-beholder-white: #dbd1e8;
 	--ak-beholder-iris-light: #9468d6; --ak-beholder-iris-dark: #45238a; --ak-beholder-pupil: #12091c;
 }
 .ak-beholder__body-top { stop-color: var(--ak-beholder-body-top); }
@@ -71,6 +71,7 @@
 .ak-beholder__flame { fill: var(--ak-beholder-flame); opacity: 0.75; }
 .ak-beholder__shade { fill: var(--ak-beholder-line); opacity: 0.5; }
 .ak-beholder__line { stroke: var(--ak-beholder-line); }
+.ak-beholder__rim { stroke: var(--ak-beholder-rim); }
 .ak-beholder__white { fill: var(--ak-beholder-white); }
 .ak-beholder__dot, .ak-beholder__pupil { fill: var(--ak-beholder-pupil); }
 .ak-beholder__ring { stroke: var(--ak-beholder-iris-dark); stroke-opacity: 0.6; }

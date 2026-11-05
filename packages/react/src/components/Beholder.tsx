@@ -61,6 +61,12 @@ export function Beholder({ phase = 'idle', size = 28, jumping, label, className 
 				<clipPath id={`${id}-eye`}><path d={EYE} /></clipPath>
 			</defs>
 
+			{/* a thin lighter rim outside the outline, so the shape holds on dark pages */}
+			<g className="ak-beholder__rim" fill="none">
+				<path d={BODY} strokeWidth="3.6" strokeLinejoin="round" />
+				{STALKS.map(([cx, cy, r], i) => <circle key={i} cx={cx} cy={cy} r={r} strokeWidth="2.8" />)}
+			</g>
+
 			{/* the body: fill, the inner flame and a shadow at the base, then the outline */}
 			<path d={BODY} fill={`url(#${id}-body)`} />
 			<g clipPath={`url(#${id}-body-clip)`}>
