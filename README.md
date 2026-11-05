@@ -1,5 +1,7 @@
 # Beholder
 
+[![@rubrion/beholder-server](https://img.shields.io/npm/v/@rubrion/beholder-server?label=%40rubrion%2Fbeholder-server)](https://www.npmjs.com/package/@rubrion/beholder-server) [![@rubrion/beholder-react](https://img.shields.io/npm/v/@rubrion/beholder-react?label=%40rubrion%2Fbeholder-react)](https://www.npmjs.com/package/@rubrion/beholder-react)
+
 An agent kit for Cloudflare apps, named after its mascot. An AI assistant you can drop into any Cloudflare app: Mastra agents on a Worker
 with D1 memory, a gateway in your app's API, and a React chat UI that streams the
 agent's thinking, tool calls and answer. Extracted from the Cerne assistant. Formerly `@rubrion/agent-kit-*`: the API is the same, only the package names changed.
