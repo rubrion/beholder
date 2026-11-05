@@ -23,7 +23,7 @@ browser ──► app Worker /api/agent/*  (gateway: who is asking? may they ask
 
 ## Demo
 
-A playground for the mascot (every phase, sizes, colors, light and dark), using the library from this repo:
+A playground for the mascot (every phase, sizes, colors, light and dark), live at https://beholder.rubrion.ai. To run it from this repo's library:
 
 ```sh
 npm install

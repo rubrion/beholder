@@ -4,7 +4,10 @@
  */
 {
 	"$schema": "node_modules/wrangler/config-schema.json",
-	"name": "demo",
+	// The Beholder playground, public at beholder.rubrion.ai (Rubrion account).
+	"name": "beholder-demo",
+	"account_id": "1da13e1445adbf8765ae19ae46ba7ac8",
+	"routes": [{ "pattern": "beholder.rubrion.ai", "custom_domain": true }],
 	"compatibility_date": "2026-11-05",
 	"assets": {
 		// Vite builds the page into ./dist (npm run build); the Cloudflare Vite plugin serves it in dev.
