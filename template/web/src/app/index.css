@@ -1,8 +1,8 @@
 @import "tailwindcss";
-@import "@rubrion/agent-kit-react/styles.css";
+@import "@rubrion/beholder-react/styles.css";
 /* Let Tailwind see the classes the kit's components use. */
-@source "../../node_modules/@rubrion/agent-kit-react/dist";
-@source "../../../../node_modules/@rubrion/agent-kit-react/dist";
+@source "../../node_modules/@rubrion/beholder-react/dist";
+@source "../../../../node_modules/@rubrion/beholder-react/dist";
 
 @custom-variant dark (&:where(.dark, .dark *));
 

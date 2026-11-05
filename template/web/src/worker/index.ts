@@ -2,7 +2,7 @@
 // In a real app this is your existing API Worker: add the gateway route and the
 // AGENT service binding.
 import { Hono } from 'hono';
-import { createAgentGateway, type Caller } from '@rubrion/agent-kit-server/gateway';
+import { createAgentGateway, type Caller } from '@rubrion/beholder-server/gateway';
 import { accessEmail } from './access';
 
 interface Env {

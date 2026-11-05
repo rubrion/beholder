@@ -1,6 +1,6 @@
 // The agent worker. Everything specific to an app is here: the agents, their
 // tools, the context sent with each question, and what to do with the cost.
-import { createAgentWorker } from '@rubrion/agent-kit-server';
+import { createAgentWorker } from '@rubrion/beholder-server';
 import { AGENTS } from './agents';
 
 interface Env {

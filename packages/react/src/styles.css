@@ -1,4 +1,4 @@
-/* agent-kit: the few styles Tailwind utilities can't express (markdown, mascot,
+/* Beholder: the few styles Tailwind utilities can't express (markdown, mascot,
    motion). Colors come from the shadcn/ui tokens (--primary, --muted, --border…). */
 
 /* The kit's roots carry .ak. On a host without Tailwind's preflight, this resets the

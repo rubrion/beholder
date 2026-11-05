@@ -1,8 +1,8 @@
-# agent-kit
+# Beholder
 
-An AI assistant you can drop into any Cloudflare app: Mastra agents on a Worker
+An agent kit for Cloudflare apps, named after its mascot. An AI assistant you can drop into any Cloudflare app: Mastra agents on a Worker
 with D1 memory, a gateway in your app's API, and a React chat UI that streams the
-agent's thinking, tool calls and answer. Extracted from the Cerne assistant.
+agent's thinking, tool calls and answer. Extracted from the Cerne assistant. Formerly `@rubrion/agent-kit-*`: the API is the same, only the package names changed.
 
 Live demo (Rubrion team, Cloudflare Access): https://agent-kit.rubrion.ai
 
@@ -15,8 +15,8 @@ browser ──► app Worker /api/agent/*  (gateway: who is asking? may they ask
 
 | Package | What it is |
 |---|---|
-| [`@rubrion/agent-kit-server`](packages/server) | `createAgentWorker` (the agent Worker) and, from `@rubrion/agent-kit-server/gateway`, `createAgentGateway` (Hono routes for your API, no Mastra in its bundle) |
-| [`@rubrion/agent-kit-react`](packages/react) | `AgentProvider`, `ChatBox` (floating, non-modal, on every screen), `AssistantScreen` (full page with agent picker and conversations), and the pieces they are made of |
+| [`@rubrion/beholder-server`](packages/server) | `createAgentWorker` (the agent Worker) and, from `@rubrion/beholder-server/gateway`, `createAgentGateway` (Hono routes for your API, no Mastra in its bundle) |
+| [`@rubrion/beholder-react`](packages/react) | `AgentProvider`, `ChatBox` (floating, non-modal, on every screen), `AssistantScreen` (full page with agent picker and conversations), and the pieces they are made of |
 | [`template/`](template) | A working app with both: `template/agent` (the agent Worker) and `template/web` (Vite + React + Tailwind, the Worker serving it with the gateway behind Cloudflare Access). This is what runs at agent-kit.rubrion.ai |
 
 ## Demo
@@ -31,7 +31,7 @@ npm run demo        # http://localhost:5180
 ## Start a new project from the template
 
 ```bash
-cp -r agent-kit/template my-app && cd my-app
+cp -r beholder/template my-app && cd my-app
 # in agent/package.json and web/package.json, change "*" to the published versions
 # (or keep the template inside this repo's workspaces while the packages are unpublished)
 ```
@@ -52,7 +52,7 @@ cp -r agent-kit/template my-app && cd my-app
 **1. The agent Worker** (a new Worker, no route):
 
 ```ts
-import { createAgentWorker } from '@rubrion/agent-kit-server';
+import { createAgentWorker } from '@rubrion/beholder-server';
 
 export default createAgentWorker<Env>({
   agents: [{ id: 'main', name: 'Assistant', tagline: 'Everyday questions', tools, instructions }],
@@ -71,7 +71,7 @@ binding, a D1 binding, and `"workers_dev": false` (only the gateway may call it)
 **2. The gateway** in your API Worker, with a service binding `AGENT` to the agent Worker:
 
 ```ts
-import { createAgentGateway } from '@rubrion/agent-kit-server/gateway';
+import { createAgentGateway } from '@rubrion/beholder-server/gateway';
 
 app.route('/api/agent', createAgentGateway({
   agent: (c) => c.env.AGENT,
@@ -87,8 +87,8 @@ app.route('/api/agent', createAgentGateway({
 **3. The UI**, above the router:
 
 ```tsx
-import { AgentProvider, AssistantScreen, ChatBox, ptBR } from '@rubrion/agent-kit-react';
-import '@rubrion/agent-kit-react/styles.css';
+import { AgentProvider, AssistantScreen, ChatBox, ptBR } from '@rubrion/beholder-react';
+import '@rubrion/beholder-react/styles.css';
 
 <AgentProvider person={me.id} personName={me.name} strings={ptBR}
   toolLabels={{ list_projects: ['Consultando os projetos', 'Consultou os projetos'] }}
@@ -142,7 +142,7 @@ The components use the shadcn/ui tokens (`bg-card`, `text-muted-foreground`, `ri
 they match a shadcn app. Tailwind must scan the package; in your CSS:
 
 ```css
-@source "../node_modules/@rubrion/agent-kit-react/dist";
+@source "../node_modules/@rubrion/beholder-react/dist";
 ```
 
 On a site without Tailwind's preflight, import only `tailwindcss/theme` and
@@ -194,4 +194,4 @@ MIT
 
 ## Releases
 
-Every push to `main` is released by CI (`.github/workflows/release.yml`): semantic-release runs once per package, reading only the commits that touch its folder. Commit messages follow [Conventional Commits](https://www.conventionalcommits.org), scoped by package (`feat(react): …`, `fix(server): …`): `fix` publishes a patch, `feat` a minor, a breaking change (`feat!:` or a `BREAKING CHANGE:` footer) a major; `docs`, `chore`, `ci`, `test` and `refactor` publish nothing. npm trusts the workflow (trusted publishing), so there is no token and each version carries provenance. Versions live in git tags (`@rubrion/agent-kit-react-v0.2.0`) and on npm, not in `package.json`.
+Every push to `main` is released by CI (`.github/workflows/release.yml`): semantic-release runs once per package, reading only the commits that touch its folder. Commit messages follow [Conventional Commits](https://www.conventionalcommits.org), scoped by package (`feat(react): …`, `fix(server): …`): `fix` publishes a patch, `feat` a minor, a breaking change (`feat!:` or a `BREAKING CHANGE:` footer) a major; `docs`, `chore`, `ci`, `test` and `refactor` publish nothing. npm trusts the workflow (trusted publishing), so there is no token and each version carries provenance. Versions live in git tags (`@rubrion/beholder-react-v0.2.0`) and on npm, not in `package.json`.

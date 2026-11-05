@@ -1,7 +1,7 @@
 # Every push to main: build, test, then semantic-release once per package.
 # Each package reads only the commits that touch its folder (Conventional
 # Commits, semantic-release-monorepo) and is tagged on its own
-# (@rubrion/agent-kit-react-v0.2.0). fix → patch, feat → minor, a breaking
+# (@rubrion/beholder-react-v0.2.0). fix → patch, feat → minor, a breaking
 # change (! or BREAKING CHANGE) → major. npm trusts this workflow (trusted
 # publishing, OIDC): no token, and each version gets provenance.
 name: release

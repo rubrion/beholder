@@ -50,7 +50,7 @@ export interface AttachConfig {
 	upload: (file: File) => Promise<{ note: string } | { error: string }>;
 }
 
-/** The documents the agent worker's read_file converts (DEFAULT_ACCEPT in @rubrion/agent-kit-server). */
+/** The documents the agent worker's read_file converts (DEFAULT_ACCEPT in @rubrion/beholder-server). */
 export const DEFAULT_ATTACH_ACCEPT = '.pdf,.docx,.xlsx,.xlsm,.xlsb,.xls,.ods,.odt,.csv,.html,.htm,.xml,.txt,.md,.json';
 
 /** Uploads to the gateway's POST {basePath}/files. */

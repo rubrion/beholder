@@ -12,8 +12,8 @@
     "cf-typegen": "wrangler types"
   },
   "dependencies": {
-    "@rubrion/agent-kit-react": "*",
-    "@rubrion/agent-kit-server": "*",
+    "@rubrion/beholder-react": "*",
+    "@rubrion/beholder-server": "*",
     "hono": "^4.13.14",
     "lucide-react": "^1.65.0",
     "react": "^19.3.1",

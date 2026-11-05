@@ -1,4 +1,4 @@
-import { Beholder, Eye, type Phase } from '@rubrion/agent-kit-react';
+import { Beholder, Eye, type Phase } from '@rubrion/beholder-react';
 import { useEffect, useState, type CSSProperties } from 'react';
 
 const PHASES: { id: Phase; label: string; note: string }[] = [
@@ -45,13 +45,13 @@ export function App() {
 	return (
 		<main className={light ? 'light' : undefined}>
 			<header>
-				<span className="eyebrow">@rubrion/agent-kit-react</span>
+				<span className="eyebrow">@rubrion/beholder-react</span>
 				<h1>Beholder</h1>
 				<p>The kit's default mascot. A flame-shaped body, one big eye and five eyestalks, every eye following your cursor. Move the pointer around, switch the phase, or play a whole answer.</p>
 			</header>
 
 			<div className="stage" style={vars}>
-				<Beholder phase={phase} size={size} label="Beholder, the agent-kit mascot" />
+				<Beholder phase={phase} size={size} label="Beholder, the agent kit's mascot" />
 			</div>
 
 			<div className="controls">
@@ -102,8 +102,8 @@ export function App() {
 			<section className="code">
 				<h2>Use it</h2>
 				<p>Every <code>ChatBox</code> and <code>AssistantScreen</code> shows it by default. On its own:</p>
-				<pre>{`import { Beholder } from '@rubrion/agent-kit-react';
-import '@rubrion/agent-kit-react/styles.css';
+				<pre>{`import { Beholder } from '@rubrion/beholder-react';
+import '@rubrion/beholder-react/styles.css';
 
 <Beholder phase="thinking" size={40} label="Assistant" />`}</pre>
 				<p>Recolor it with CSS variables, or bring back the eye with <code>renderMascot</code>:</p>

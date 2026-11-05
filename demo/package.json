@@ -2,7 +2,7 @@
   "name": "demo",
   "version": "0.0.0",
   "private": true,
-  "description": "Playground for @rubrion/agent-kit-react's Beholder mascot: every phase, sizes, light and dark, eyes following the cursor. Uses the library from this repo.",
+  "description": "Playground for @rubrion/beholder-react's Beholder mascot: every phase, sizes, light and dark, eyes following the cursor. Uses the library from this repo.",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -13,7 +13,7 @@
     "deploy": "npm run build && wrangler deploy"
   },
   "dependencies": {
-    "@rubrion/agent-kit-react": "*",
+    "@rubrion/beholder-react": "*",
     "lucide-react": "^1.65.0",
     "react": "^19.3.1",
     "react-dom": "^19.3.1"

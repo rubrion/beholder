@@ -1,4 +1,4 @@
-import { AgentProvider, AssistantScreen, ChatBox, Mascot } from '@rubrion/agent-kit-react';
+import { AgentProvider, AssistantScreen, ChatBox, Mascot } from '@rubrion/beholder-react';
 import { Moon, Sun } from 'lucide-react';
 import { useEffect, useState, type ReactNode } from 'react';
 
@@ -51,7 +51,7 @@ export function App() {
 		>
 			<div className="flex h-full flex-col">
 				<header className="flex items-center gap-3 border-b bg-card px-4 py-2.5">
-					<a href="#/" className="flex items-center gap-2 font-semibold tracking-tight"><Mascot size={26} /> agent-kit</a>
+					<a href="#/" className="flex items-center gap-2 font-semibold tracking-tight"><Mascot size={26} /> Beholder</a>
 					<nav className="ml-4 flex gap-1 text-sm">
 						<NavLink to="/" current={route !== '/assistant'}>Overview</NavLink>
 						<NavLink to="/assistant" current={route === '/assistant'}>Assistant</NavLink>
@@ -91,7 +91,7 @@ function Overview() {
 			</section>
 			<section className="grid gap-3">
 				<h2 className="text-lg font-semibold">1 · The agent worker</h2>
-				<Code>{`import { createAgentWorker, createTool, z } from '@rubrion/agent-kit-server';
+				<Code>{`import { createAgentWorker, createTool, z } from '@rubrion/beholder-server';
 
 export default createAgentWorker<Env>({
   agents: [{ id: 'main', name: 'Assistant', tagline: 'Everyday questions',
@@ -124,7 +124,7 @@ export default createAgentWorker<Env>({
 // on the /assistant route
 <AssistantScreen />`}</Code>
 			</section>
-			<p className="text-sm text-muted-foreground">Code and template: <code className="rounded bg-muted px-1">rubrion/agent-kit</code>. Copy <code className="rounded bg-muted px-1">template/</code> to start a new project.</p>
+			<p className="text-sm text-muted-foreground">Code and template: <code className="rounded bg-muted px-1">rubrion/beholder</code>. Copy <code className="rounded bg-muted px-1">template/</code> to start a new project.</p>
 		</article>
 	);
 }

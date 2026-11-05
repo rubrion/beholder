@@ -1,15 +1,26 @@
 {
-  "name": "@rubrion/agent-kit-server",
+  "name": "@rubrion/beholder-server",
   "version": "0.0.0-semantic-release",
-  "description": "Agent worker (Mastra on Cloudflare Workers, D1 memory, slim SSE) and the gateway that fronts it.",
+  "description": "Beholder's server half, an agent kit for Cloudflare apps: agent worker (Mastra on Cloudflare Workers, D1 memory, slim SSE) and the gateway that fronts it.",
+  "keywords": [
+    "agent-kit",
+    "ai-agent",
+    "assistant",
+    "cloudflare-workers",
+    "mastra",
+    "chat",
+    "beholder",
+    "d1",
+    "hono"
+  ],
   "license": "MIT",
   "author": "Rubrion",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/rubrion/agent-kit.git",
+    "url": "git+https://github.com/rubrion/beholder.git",
     "directory": "packages/server"
   },
-  "homepage": "https://github.com/rubrion/agent-kit#readme",
+  "homepage": "https://github.com/rubrion/beholder#readme",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",

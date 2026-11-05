@@ -1,7 +1,7 @@
 {
-  "name": "agent-kit",
+  "name": "beholder",
   "private": true,
-  "description": "An embeddable AI assistant for Cloudflare apps: Mastra agent worker, gateway and React chat UI, plus a ready-to-copy template.",
+  "description": "Beholder, an agent kit for Cloudflare apps: Mastra agent worker, gateway and React chat UI, plus a ready-to-copy template.",
   "license": "MIT",
   "workspaces": [
     "packages/server",
@@ -11,8 +11,8 @@
     "demo"
   ],
   "scripts": {
-    "build": "npm run build -w @rubrion/agent-kit-server -w @rubrion/agent-kit-react",
-    "test": "npm test -w @rubrion/agent-kit-server -w @rubrion/agent-kit-react",
+    "build": "npm run build -w @rubrion/beholder-server -w @rubrion/beholder-react",
+    "test": "npm test -w @rubrion/beholder-server -w @rubrion/beholder-react",
     "check": "npm run build && npm run check -w template/agent -w template/web -w demo",
     "dev": "npm run build && npm run dev -w template/web",
     "demo": "npm run build && npm run dev -w demo",

@@ -1,9 +1,9 @@
 // The agents the assistant offers. Same tools, two speeds: one answers directly,
 // the other reasons first (the UI shows the reasoning).
-import type { AgentDefinition } from '@rubrion/agent-kit-server';
+import type { AgentDefinition } from '@rubrion/beholder-server';
 import { tools } from './tools';
 
-const GUIDE = `You are the guide of agent-kit, Rubrion's template for embedding an AI assistant in Cloudflare apps. You answer how to use, adapt and deploy the kit.
+const GUIDE = `You are the guide of Beholder, Rubrion's agent kit for embedding an AI assistant in Cloudflare apps. You answer how to use, adapt and deploy the kit.
 
 HOW TO ANSWER
 - Short and useful. Markdown: lists, bold, small code blocks. Answer in the language of the question.

@@ -1,4 +1,4 @@
-// @rubrion/agent-kit-server: the server half of the agent kit.
+// @rubrion/beholder-server: the server half of Beholder, the agent kit.
 //   createAgentWorker   the agent worker (Mastra + D1 memory + slim SSE), behind a service binding
 //   createAgentGateway  the app-side routes: identity, preflight, forwarding
 export { createAgentWorker, type AgentWorkerOptions } from './worker.js';

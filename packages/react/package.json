@@ -1,15 +1,25 @@
 {
-  "name": "@rubrion/agent-kit-react",
+  "name": "@rubrion/beholder-react",
   "version": "0.0.0-semantic-release",
-  "description": "React chat UI for the agent kit: floating chat box, full assistant screen, streamed steps (thinking, tool calls, text).",
+  "description": "Beholder's React chat UI, an agent kit for Cloudflare apps: floating chat box, full assistant screen, streamed steps (thinking, tool calls, text).",
+  "keywords": [
+    "agent-kit",
+    "ai-agent",
+    "assistant",
+    "cloudflare-workers",
+    "mastra",
+    "chat",
+    "beholder",
+    "react"
+  ],
   "license": "MIT",
   "author": "Rubrion",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/rubrion/agent-kit.git",
+    "url": "git+https://github.com/rubrion/beholder.git",
     "directory": "packages/react"
   },
-  "homepage": "https://github.com/rubrion/agent-kit#readme",
+  "homepage": "https://github.com/rubrion/beholder#readme",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",

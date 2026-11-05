@@ -10,7 +10,7 @@
     "cf-typegen": "wrangler types"
   },
   "dependencies": {
-    "@rubrion/agent-kit-server": "*"
+    "@rubrion/beholder-server": "*"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^5.20260908.1",

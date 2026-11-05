@@ -5,15 +5,15 @@
 // Rule of thumb for tools: return FACTS already computed (dates, totals, "overdue
 // by 3 days"), so the model never does math or guesses. When data is missing,
 // say so explicitly ({ found: false, reason }) so the agent asks instead of inventing.
-import { createTool, z } from '@rubrion/agent-kit-server';
+import { createTool, z } from '@rubrion/beholder-server';
 
 const TOPICS: Record<string, { title: string; body: string }> = {
 	overview: {
 		title: 'What the kit is',
-		body: `agent-kit embeds an AI assistant in a Cloudflare app. Three pieces:
-1. @rubrion/agent-kit-server createAgentWorker: a Worker running Mastra agents with D1 memory, streaming slim SSE events (text, reasoning, tool calls/results). No public route.
-2. @rubrion/agent-kit-server createAgentGateway: Hono routes mounted in the app's own Worker. Turns the app session into a Caller, runs a preflight (key set? budget left?), forwards to the agent worker through a service binding.
-3. @rubrion/agent-kit-react: AgentProvider (conversation state above the router), ChatBox (floating, non-modal, in every screen) and AssistantScreen (full page with agent picker and conversation list).
+		body: `Beholder embeds an AI assistant in a Cloudflare app. Three pieces:
+1. @rubrion/beholder-server createAgentWorker: a Worker running Mastra agents with D1 memory, streaming slim SSE events (text, reasoning, tool calls/results). No public route.
+2. @rubrion/beholder-server createAgentGateway: Hono routes mounted in the app's own Worker. Turns the app session into a Caller, runs a preflight (key set? budget left?), forwards to the agent worker through a service binding.
+3. @rubrion/beholder-react: AgentProvider (conversation state above the router), ChatBox (floating, non-modal, in every screen) and AssistantScreen (full page with agent picker and conversation list).
 The template folder is a working app with all three; copy it and replace the agents and tools.`,
 	},
 	architecture: {
@@ -29,7 +29,7 @@ Instructions that work: say where facts come from (only tools/context), ask when
 	},
 	tools: {
 		title: 'Writing tools',
-		body: `Use createTool and z (re-exported by @rubrion/agent-kit-server). Keep tools small and read-only, each answering one kind of question; return computed facts (no math left to the model) and { found: false, reason } when data is missing. Resolve names to ids in a dedicated search tool and make the other tools take ids; when the search returns none or several, the agent asks.
+		body: `Use createTool and z (re-exported by @rubrion/beholder-server). Keep tools small and read-only, each answering one kind of question; return computed facts (no math left to the model) and { found: false, reason } when data is missing. Resolve names to ids in a dedicated search tool and make the other tools take ids; when the search returns none or several, the agent asks.
 To write data, prefer drafts: a tool returns a draft object (never writes); the UI renders a card with a link; the person confirms and the app's normal API persists it.`,
 	},
 	scoping: {
@@ -45,7 +45,7 @@ onUsage(usage) reports tokens and USD per answer: write it to the app database a
 		title: 'Using the React UI',
 		body: `<AgentProvider person={id} personName={name} strings={ptBR} toolLabels={{ my_tool: ['Looking…', 'Looked'] }} suggestions={[...]} renderMascot={...} renderBlocked={...}> wraps the app above the router.
 <ChatBox onExpand={() => navigate('/assistant')} hidden={path === '/assistant'} /> in the layout; <AssistantScreen /> on the assistant route.
-Import '@rubrion/agent-kit-react/styles.css' and add @source "../node_modules/@rubrion/agent-kit-react/dist" to the Tailwind CSS. Components use shadcn/ui tokens (bg-card, text-muted-foreground, ring-ring…).`,
+Import '@rubrion/beholder-react/styles.css' and add @source "../node_modules/@rubrion/beholder-react/dist" to the Tailwind CSS. Components use shadcn/ui tokens (bg-card, text-muted-foreground, ring-ring…).`,
 	},
 	deploy: {
 		title: 'Deploying',
