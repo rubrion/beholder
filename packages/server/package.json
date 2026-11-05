@@ -34,7 +34,7 @@
     "prepublishOnly": "npm run build"
   },
   "dependencies": {
-    "@rubrion/mastra-cloudflare": "^0.4.0",
+    "@rubrion/mastra-cloudflare": "^0.6.0",
     "hono": "^4.13.14"
   },
   "devDependencies": {

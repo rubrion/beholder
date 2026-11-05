@@ -4,9 +4,10 @@
 export { createAgentWorker, type AgentWorkerOptions } from './worker.js';
 export { toTurns } from './turns.js';
 export { createAgentGateway, type GatewayOptions, type Preflight, type Blocked } from './gateway.js';
+export { DEFAULT_ACCEPT, DEFAULT_MAX_BYTES, attachmentFolder, storeAttachment, type FilesOptions } from './files.js';
 export { HEADER, readCaller, writeCaller, writeModel } from './headers.js';
 export { DEFAULT_MODEL, PRICES, isWorkersAI, priceOf, readModelChoice, resolveModel, type Providers } from './models.js';
 export { defaultErrorMessage, slim, usageOf } from './stream.js';
 export type { AgentDefinition, Caller, ModelChoice, Price, Provider, StreamEvent, Usage } from './types.js';
 // So an agent project needs only this package to declare tools.
-export { createTool, z } from '@rubrion/mastra-cloudflare';
+export { createTool, r2Source, z, type FileSource } from '@rubrion/mastra-cloudflare';

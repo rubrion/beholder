@@ -10,7 +10,9 @@
 //   GET    /threads       conversations
 //   GET    /threads/:id   one conversation (?agent=)
 //   DELETE /threads/:id
+//   POST   /files         an attachment (with the files option): { key, note }
 import { Hono, type Context } from 'hono';
+import { storeAttachment, type FilesOptions } from './files.js';
 import { writeCaller, writeModel } from './headers.js';
 import type { Caller, ModelChoice } from './types.js';
 
@@ -27,6 +29,12 @@ export interface GatewayOptions<C extends Context = Context> {
 	preflight?: (c: C, caller: Caller) => Preflight | Promise<Preflight>;
 	/** Per-agent gate (e.g. the thinking agent is only on bigger plans). */
 	canUse?: (c: C, caller: Caller, agentId: string) => true | Blocked | Promise<true | Blocked>;
+	/**
+	 * Lets people attach files in the chat: POST /files stores each one in this bucket under
+	 * the caller's own folder (files/<tenant>/<person>/). Give the agent worker the same bucket
+	 * (its files option) so read_file can read them. A lifecycle rule on the bucket keeps it small.
+	 */
+	files?: FilesOptions & { bucket: (c: C) => R2Bucket | undefined };
 }
 
 const OFFLINE = 'The assistant is offline.';
@@ -107,6 +115,18 @@ export function createAgentGateway<C extends Context = Context>(o: GatewayOption
 		if (!caller) return c.json({ ok: false }, 401);
 		return forward(c as unknown as C, caller, `/threads/${encodeURIComponent(c.req.param('id'))}`, { method: 'DELETE' });
 	});
+
+	if (o.files) {
+		const files = o.files;
+		app.post('/files', async (c) => {
+			const ctx = c as unknown as C;
+			const caller = await who(ctx);
+			if (!caller) return c.json({ error: 'Not signed in.' }, 401);
+			const bucket = files.bucket(ctx);
+			if (!bucket) return c.json({ error: 'Attachments are not set up.' }, 503);
+			return storeAttachment(c.req.raw, bucket, caller, files);
+		});
+	}
 
 	return app;
 }

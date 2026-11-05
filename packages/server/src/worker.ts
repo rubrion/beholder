@@ -10,7 +10,8 @@
 // Own routes rather than Mastra's REST server: importing that route table at load
 // costs most of a Worker's startup budget.
 import { Hono, type Context } from 'hono';
-import { Agent, Mastra, RequestContext, d1Memory, workersAIOptions, type AiBinding } from '@rubrion/mastra-cloudflare';
+import { Agent, Mastra, RequestContext, d1Memory, forgetResults, r2Cache, r2Source, readFileTool, workersAIOptions, type AiBinding, type FileSource, type MarkdownAi } from '@rubrion/mastra-cloudflare';
+import { attachmentFolder } from './files.js';
 import { readCaller, HEADER } from './headers.js';
 import { DEFAULT_MODEL, isWorkersAI, priceOf, readModelChoice, resolveModel, PRICES, type Providers } from './models.js';
 import { defaultErrorMessage, slim, sse, SSE_DONE, usageOf } from './stream.js';
@@ -50,6 +51,21 @@ export interface AgentWorkerOptions<E> {
 	onUsage?: (usage: Usage, env: E) => void | Promise<void>;
 	/** Turns provider errors into something the person can act on. */
 	errorMessage?: (raw: string) => string;
+	/**
+	 * Gives every agent read_file: PDF, Word, Excel, CSV, HTML… as Markdown, read a piece at a
+	 * time (headings, then a section or the lines around a match). `bucket` holds the chat's
+	 * attachments (the gateway's files option writes them) and the converted-text cache;
+	 * each person reads only their own folder. `sources` adds places of the app's own,
+	 * e.g. a bucket of reference documents (r2Source from @rubrion/mastra-cloudflare).
+	 */
+	files?: {
+		bucket: (env: E) => R2Bucket;
+		sources?: (env: E) => Record<string, FileSource>;
+		/** Describe pictures with an AI model (billed by Workers AI). Off by default. */
+		images?: boolean;
+		/** Longest text handed back per call. Default 20,000 characters. */
+		maxChars?: number;
+	};
 }
 
 const CLIENT_ID = /^[a-z0-9]{6,32}$/i;
@@ -74,6 +90,31 @@ export function createAgentWorker<E extends object = Record<string, unknown>>(o:
 	let mastra: Mastra | undefined;
 
 	const definition = (id: unknown) => o.agents.find((a) => a.id === id) ?? o.agents[0];
+
+	// read_file, built once per isolate; the env it reads is the current request's.
+	let readFile: ReturnType<typeof readFileTool> | undefined;
+	function fileTool() {
+		if (!o.files) return undefined;
+		const files = o.files;
+		readFile ??= readFileTool({
+			ai: () => o.ai(current!) as unknown as MarkdownAi,
+			sources: {
+				attachment: r2Source({
+					bucket: () => files.bucket(current!),
+					describe: 'A file attached in this chat: the files/… key shown in the message.',
+					folder: (ctx) => {
+						const caller = ctx?.requestContext?.get('caller') as Caller | undefined;
+						return caller ? attachmentFolder(caller) : null;
+					},
+				}),
+				...files.sources?.(current!),
+			},
+			cache: r2Cache(() => files.bucket(current!), 'read-file-cache/'),
+			images: files.images,
+			maxChars: files.maxChars,
+		});
+		return readFile;
+	}
 	function agentOf(def: AgentDefinition) {
 		let agent = built.get(def.id);
 		if (!agent) {
@@ -84,8 +125,12 @@ export function createAgentWorker<E extends object = Record<string, unknown>>(o:
 				// the model is resolved per request: the tenant may bring its own key
 				model: (({ requestContext }: { requestContext?: RequestContext }) =>
 					resolveModel((requestContext?.get('model') as ModelChoice | undefined) ?? fallback, o.ai(current!), Boolean(def.thinking), o.providers)) as never,
-				tools: def.tools as never,
-				...(def.inputProcessors?.length ? { inputProcessors: def.inputProcessors as never } : {}),
+				tools: { ...(fileTool() ? { read_file: fileTool() } : {}), ...def.tools } as never,
+				...(() => {
+					// A file's text goes with the turn that read it, not with every message after.
+					const processors = [...(def.inputProcessors ?? []), ...(o.files ? [forgetResults(['read_file'])] : [])];
+					return processors.length ? { inputProcessors: processors as never } : {};
+				})(),
 				memory: () => getMemory(),
 			});
 			built.set(def.id, agent);
@@ -149,7 +194,10 @@ export function createAgentWorker<E extends object = Record<string, unknown>>(o:
 
 		const extra = await Promise.resolve(o.context?.({ caller, env: c.env, agent: def })).catch(() => '');
 		const who = caller.name ? `The person asking: ${caller.name}.` : '';
-		const instructions = [def.instructions, who, extra].filter(Boolean).join('\n\n');
+		const files = o.files
+			? 'Files: a message may name an attached file (a files/… key); read it with read_file (source "attachment") before answering. For a long file, read the headings first, then one section or the lines around a match.'
+			: '';
+		const instructions = [def.instructions, who, files, extra].filter(Boolean).join('\n\n');
 
 		const result = await agent.stream([{ role: 'user', content: message }] as never, {
 			requestContext: new RequestContext([['caller', caller], ['model', choice]]),
