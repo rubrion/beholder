@@ -106,6 +106,29 @@ attach={{ accept: '.pdf', upload: async (file) => {
 } }}
 ```
 
+### Files out of the box
+
+People attach PDFs, Word, Excel, CSV or HTML files in the chat and the agent reads them, a
+piece at a time: it lists a document's headings (a workbook's sheets), then reads one section
+or the lines around a word. Three lines turn it on, with one R2 bucket (add a lifecycle rule,
+e.g. 30 days, so it stays small):
+
+```ts
+// app Worker
+createAgentGateway({ ..., files: { bucket: (c) => c.env.FILES } });            // POST /files
+// agent Worker
+createAgentWorker({ ..., files: { bucket: (env) => env.FILES } });              // read_file on every agent
+```
+```tsx
+<AgentProvider ... attach>                                                        {/* the paperclip */}
+```
+
+Each file goes to `files/<tenant>/<person>/…` and only that person's questions can read it. The
+converted text is cached per file version, and a file's text is sent with the turn that read it,
+not with every message after. More places to read from (a bucket of reference documents, a
+repository) go in `files.sources`, e.g. `{ docs: r2Source({ bucket: (ctx) => env.DOCS, describe: 'A key such as "reports/q3.pdf".' }) }`;
+the model picks the source.
+
 The components use the shadcn/ui tokens (`bg-card`, `text-muted-foreground`, `ring-ring`…), so
 they match a shadcn app. Tailwind must scan the package; in your CSS:
 
@@ -141,7 +164,7 @@ On a site without Tailwind's preflight, import only `tailwindcss/theme` and
 - Scope every query by `caller.tenant` (the `scope` option) and test that tenant B never sees A.
 - A tool that returns a lot of text (a document, a web page): `inputProcessors: [forgetResults(['read_doc'])]`
   on the agent definition (`forgetResults` from `@rubrion/mastra-cloudflare`) sends it with the turn
-  that read it, not with every message after. Ready-made `readFileTool` and `browseTool` live there too.
+  that read it, not with every message after. Ready-made `readFileTool` and `browseTool` live there too (the `files` option already wires `read_file`).
 
 ## Develop
 

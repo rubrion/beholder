@@ -37,18 +37,42 @@ export interface AgentConfig {
 	/** Shown instead of the conversation when the preflight blocks (missing key, budget…). */
 	renderBlocked?: (status: Status) => ReactNode;
 	/**
-	 * Files the person can attach to a question. The app uploads each one its own way and returns
-	 * the line the agent reads (e.g. a reference to pass to a tool); it goes out with the question.
+	 * Files the person can attach to a question; each upload returns the line the agent reads,
+	 * which goes out with the question. `true` uses the gateway's own POST {basePath}/files
+	 * (its files option) and the documents the agent's read_file converts. Or upload your own way.
 	 */
-	attach?: {
-		/** The file input's accept, e.g. ".xml,.zip". */
-		accept?: string;
-		upload: (file: File) => Promise<{ note: string } | { error: string }>;
+	attach?: true | AttachConfig;
+}
+
+export interface AttachConfig {
+	/** The file input's accept, e.g. ".xml,.zip". */
+	accept?: string;
+	upload: (file: File) => Promise<{ note: string } | { error: string }>;
+}
+
+/** The documents the agent worker's read_file converts (DEFAULT_ACCEPT in @rubrion/agent-kit-server). */
+export const DEFAULT_ATTACH_ACCEPT = '.pdf,.docx,.xlsx,.xlsm,.xlsb,.xls,.ods,.odt,.csv,.html,.htm,.xml,.txt,.md,.json';
+
+/** Uploads to the gateway's POST {basePath}/files. */
+export function gatewayAttach(basePath: string, headers: () => HeadersInit = () => ({})): AttachConfig {
+	return {
+		accept: DEFAULT_ATTACH_ACCEPT,
+		upload: async (file) => {
+			const body = new FormData();
+			body.append('file', file);
+			try {
+				const res = await fetch(`${basePath}/files`, { method: 'POST', body, headers: headers() });
+				const data = (await res.json().catch(() => null)) as { note?: string; error?: string } | null;
+				return res.ok && data?.note ? { note: data.note } : { error: data?.error ?? `Upload failed (HTTP ${res.status}).` };
+			} catch (e) {
+				return { error: (e as Error).message };
+			}
+		},
 	};
 }
 
 export interface Conversation {
-	config: Required<Pick<AgentConfig, 'basePath' | 'storageKey'>> & AgentConfig;
+	config: Required<Pick<AgentConfig, 'basePath' | 'storageKey'>> & Omit<AgentConfig, 'attach'> & { attach?: AttachConfig };
 	t: Strings;
 	turns: Turn[];
 	busy: boolean;
@@ -239,7 +263,7 @@ export function AgentProvider({ children, ...config }: AgentConfig & { children:
 
 	const last = turns[turns.length - 1];
 	const value: Conversation = {
-		config: { ...config, basePath, storageKey },
+		config: { ...config, basePath, storageKey, attach: config.attach === true ? gatewayAttach(basePath, () => headers()) : config.attach },
 		t,
 		turns, busy, phase: phaseOf(last, busy),
 		agents: agents.data,
