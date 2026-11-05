@@ -8,6 +8,8 @@ name: release
 on:
   push:
     branches: [main]
+  # Run by hand from the Actions tab (gh workflow run release.yml), e.g. to retry a release.
+  workflow_dispatch:
 permissions:
   contents: write
   issues: write
