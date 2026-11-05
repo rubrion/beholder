@@ -38,3 +38,13 @@ figcaption { font: 12px var(--mono); color: var(--muted); }
 .code p { margin: 0; color: var(--muted); }
 pre { margin: 0; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 16px; overflow-x: auto; font: 13px/1.6 var(--mono); }
 code { font-family: var(--mono); font-size: .9em; }
+
+/* The intro modal: the video, a line, one button. */
+.watch { justify-self: center; margin-top: 6px; background: none; border-style: dashed; }
+.intro { padding: 0; border: 1px solid var(--line); border-radius: 14px; background: var(--surface); color: var(--fg); width: min(720px, calc(100vw - 32px)); max-height: calc(100dvh - 32px); overflow: auto; }
+.intro::backdrop { background: rgb(8 5 12 / .72); }
+.intro video { display: block; width: 100%; height: auto; background: #141413; }
+.intro__body { display: grid; gap: 10px; padding: 18px 22px 22px; }
+.intro__body h2 { font: 600 22px/1.2 var(--display); letter-spacing: .05em; margin: 0; }
+.intro__body p { margin: 0; color: var(--muted); }
+.intro__start { justify-self: end; background: var(--accent); border-color: var(--accent); color: var(--bg); }

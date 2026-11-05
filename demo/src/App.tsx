@@ -1,5 +1,6 @@
 import { Beholder, Eye, type Phase } from '@rubrion/beholder-react';
-import { useEffect, useState, type CSSProperties } from 'react';
+import { useEffect, useRef, useState, type CSSProperties } from 'react';
+import { Intro, type IntroHandle } from './Intro';
 
 const PHASES: { id: Phase; label: string; note: string }[] = [
 	{ id: 'idle', label: 'Idle', note: 'Waiting. The eyes blink now and then, each on its own beat.' },
@@ -24,6 +25,7 @@ export function App() {
 	const [size, setSize] = useState(240);
 	const [palette, setPalette] = useState('default');
 	const [light, setLight] = useState(false);
+	const intro = useRef<IntroHandle>(null);
 
 	useEffect(() => {
 		if (!playing) return;
@@ -44,10 +46,12 @@ export function App() {
 
 	return (
 		<main className={light ? 'light' : undefined}>
+			<Intro ref={intro} />
 			<header>
 				<span className="eyebrow">@rubrion/beholder-react</span>
 				<h1>Beholder</h1>
 				<p>The kit's default mascot. A flame-shaped body, one big eye and five eyestalks, every eye following your cursor. Move the pointer around, switch the phase, or play a whole answer.</p>
+				<button type="button" className="watch" onClick={() => intro.current?.open()}>▶ Watch the intro</button>
 			</header>
 
 			<div className="stage" style={vars}>
