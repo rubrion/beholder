@@ -25,7 +25,7 @@
 }
 .ak-jump { animation: ak-jump 1.8s infinite; }
 
-/* Mascot: an eye. The pupil's follow-the-cursor offset is set inline (Mascot.tsx);
+/* Eye, the alternative mascot. The pupil's follow-the-cursor offset is set inline (Eye.tsx);
    these animate the layers inside it, so both combine. */
 .ak-mascot { display: block; flex: 0 0 auto; overflow: visible; color: var(--primary, #555); }
 .ak-mascot__badge { fill: var(--card, #fff); stroke: color-mix(in oklab, var(--foreground, #222) 18%, transparent); }
@@ -56,6 +56,49 @@
 @keyframes ak-pulse { 0%, 100% { transform: scale(1); } 45% { transform: scale(1.12); } }
 .ak-mascot--speaking .ak-mascot__iris { animation: ak-pulse 0.5s ease-in-out infinite; }
 .ak-mascot--speaking .ak-mascot__pupil { animation: ak-pulse 0.5s ease-in-out infinite reverse; }
+
+/* Beholder, the default mascot: its own deep purples, overridable per app. The
+   gaze offsets (--ak-look, --ak-peek) are set inline (Beholder.tsx). */
+.ak-beholder {
+	--ak-beholder-body-top: #41246a; --ak-beholder-body-bottom: #231433; --ak-beholder-flame: #53307f;
+	--ak-beholder-line: #150b22; --ak-beholder-white: #dbd1e8;
+	--ak-beholder-iris-light: #9468d6; --ak-beholder-iris-dark: #45238a; --ak-beholder-pupil: #12091c;
+}
+.ak-beholder__body-top { stop-color: var(--ak-beholder-body-top); }
+.ak-beholder__body-bottom { stop-color: var(--ak-beholder-body-bottom); }
+.ak-beholder__iris-light { stop-color: var(--ak-beholder-iris-light); }
+.ak-beholder__iris-dark { stop-color: var(--ak-beholder-iris-dark); }
+.ak-beholder__flame { fill: var(--ak-beholder-flame); opacity: 0.75; }
+.ak-beholder__shade { fill: var(--ak-beholder-line); opacity: 0.5; }
+.ak-beholder__line { stroke: var(--ak-beholder-line); }
+.ak-beholder__white { fill: var(--ak-beholder-white); }
+.ak-beholder__dot, .ak-beholder__pupil { fill: var(--ak-beholder-pupil); }
+.ak-beholder__ring { stroke: var(--ak-beholder-iris-dark); stroke-opacity: 0.6; }
+.ak-beholder__glint { fill: #fff; opacity: 0.85; }
+.ak-beholder__look { transform: var(--ak-look, none); transition: transform 0.12s ease-out; }
+.ak-beholder__peek { transform: var(--ak-peek, none); transition: transform 0.12s ease-out; }
+.ak-beholder__eye, .ak-beholder__gaze, .ak-beholder__ring, .ak-beholder__iris, .ak-beholder__pupil { transform-box: view-box; transform-origin: 32px 40px; }
+.ak-beholder__stalk, .ak-beholder__dot { transform-box: fill-box; transform-origin: center; }
+
+/* Idle: the big eye blinks now and then, the stalk eyes on their own beat. */
+.ak-beholder--idle .ak-beholder__eye { animation: ak-blink 5.2s infinite; }
+.ak-beholder--idle .ak-beholder__stalk { animation: ak-blink 7.3s infinite; }
+.ak-beholder--idle .ak-beholder__stalk:nth-child(2n) { animation-duration: 6.1s; }
+
+/* Thinking: the gaze drifts up and the pupil narrows; the stalk eyes look up too. */
+.ak-beholder--thinking .ak-beholder__gaze { animation: ak-ponder 2.4s ease-in-out infinite; }
+.ak-beholder--thinking .ak-beholder__pupil { transform: scale(0.75); }
+.ak-beholder--thinking .ak-beholder__dot { transform: translateY(-0.6px); }
+
+/* Using a tool: scanning, the iris ring turning, the stalk eyes blinking in turn. */
+@keyframes ak-wink { 0%, 70%, 100% { transform: scaleY(1); } 80% { transform: scaleY(0.1); } }
+.ak-beholder--tool .ak-beholder__gaze { animation: ak-scan 1.1s ease-in-out infinite; }
+.ak-beholder--tool .ak-beholder__ring { animation: ak-turn 1.6s linear infinite; }
+.ak-beholder--tool .ak-beholder__stalk { animation: ak-wink 0.65s ease-in-out infinite; }
+
+/* Speaking: the iris pulses with the words. */
+.ak-beholder--speaking .ak-beholder__iris { animation: ak-pulse 0.5s ease-in-out infinite; }
+.ak-beholder--speaking .ak-beholder__pupil { animation: ak-pulse 0.5s ease-in-out infinite reverse; }
 
 @media (prefers-reduced-motion: reduce) {
 	.ak-rise, .ak-jump, .ak-mascot * { animation: none !important; transition: none !important; }

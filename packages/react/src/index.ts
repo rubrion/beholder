@@ -10,4 +10,6 @@ export { AssistantScreen, AgentPicker, ConversationList } from './components/Ass
 export { Availability, CompactConversation, Composer, Suggestions, Thread } from './components/Conversation.js';
 export { Markdown, ThinkStep, ToolStep } from './components/Steps.js';
 export { Mascot } from './components/Mascot.js';
+export { Beholder } from './components/Beholder.js';
+export { Eye } from './components/Eye.js';
 export { Avatar, IconButton } from './components/ui.js';
